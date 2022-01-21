@@ -2,38 +2,87 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "For a plug flow reactor ?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "axial diffusivity is infinite, radial diffusivity is zero",
+        "b": "axial diffusivity is zero, radial diffusivity is zero",
+        "c": "axial diffusivity is zero, radial diffusivity is infinite",
+        "d": "axial diffusivity is infinite, radial diffusivity is infinite"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
-      },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
-    },
-    {
-      "question": "This is a Sample Question 2?",
-      "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
-      },
-      "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "",
+        "b": "",
+        "c": "",
+        "d": ""
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": ""
+    },
+    {
+      "question": "A “space time” of 5 minutes means?",
+      "answers": {
+        "a": "100% conversion of the reactant is achieved in 5 minutes",
+        "b": "One reactor volume of feed at specified conditions is processed in 5 minutes",
+        "c": "5% conversion is achieved in one minute",
+        "d": "None of the above"
+      },
+      "explanations": {
+        "a": "",
+        "b": ""
+      },
+      "correctAnswer": "b",
+      "difficulty": ""
+    },
+    {
+      "question": "For a tubular reactor with space time τ  and residence time τ, the following statement holds",
+      "answers": {
+        "a": "τ and θ always equal",
+        "b": "τ = θ when the fluid density changes in the reactor",
+        "c": "τ = θ for a non-isothermal reactor",
+        "d": "τ = θ for an isothermal tubular reactor in which the density of the process fluid is constant"
+      },
+      "explanations": {
+        "a": "",
+        "b": "",
+        "c": "",
+        "d": ""
+      },
+      "correctAnswer": "d",
+      "difficulty": ""
+    },
+    {
+      "question": "A homogeneous zero-order reaction is conducted in a PFR at 1000C and a reactor volume of V lit is required for realizing a specified conversion. If the same reaction is conducted at1100C, what will be the required reactor volume for the same conversion level as above under otherwise uniform conditions? The activation energy of the reaction is 84 KJ/mole.",
+      "answers": {
+        "a": "V/2 lit",
+        "b": "V lit",
+        "c": "V/4 lit",
+        "d": "V/6 lit"
+      },
+      "explanations": {
+        "a": "",
+        "b": "",
+        "c": "",
+        "d": ""
+      },
+      "correctAnswer": "a",
+      "difficulty": ""
+    },
+    {
+      "question": "At present a zero order reaction is being conducted in a PFR of volume V and a fractional conversion of 0.50 is realized. If a 2nd PF reactor of volume V is now added to the first reactor, the reactant concentration in the fluid exiting the battery of two PFRs will be",
+      "answers": {
+        "a": "25% of the reactant concentration in the fluid entering the first reactor",
+        "b": "zero",
+        "c": "50% of the reactant concentration in the fluid entering the second reactor",
+        "d": "either zero or 25% of the reactant concentration in the fluid entering the first reactor"
+      },
+      "explanations": {
+        "a": "",
+        "b": "",
+        "c": "",
+        "d": ""
+      },
+      "correctAnswer": "b",
+      "difficulty": ""
     }
   ]
 }
