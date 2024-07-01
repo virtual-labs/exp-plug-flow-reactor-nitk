@@ -19,14 +19,14 @@ let naohSetFirst = false;
 let ethyleSetFirst = false;
 let naohEthyleSet = 0;
 let rotameterImages = [
-  "images/202.svg",
-  "images/204.svg",
-  "images/205.svg",
-  "images/207.svg",
-  "images/209.svg",
-  "images/210.svg",
+  "./Images/202.svg",
+  "./Images/204.svg",
+  "./Images/205.svg",
+  "./Images/207.svg",
+  "./Images/209.svg",
+  "./Images/210.svg",
 ];
-let waveImages = ["images/191.svg", "images/192.svg"];
+let waveImages = ["./Images/191.svg", "./Images/192.svg"];
 let oldCond = 0;
 let actCond = 0;
 let tau = 0;
@@ -385,11 +385,11 @@ document.getElementById("restartExpt").onclick=function()
   if(eaLPH === 0 && shLPH === 0)
   {
     document.getElementById("rain").style.height="0";
-    document.getElementsByClassName("tank")[0].style.backgroundImage = "url('images/w3.png')";
+    document.getElementsByClassName("tank")[0].style.backgroundImage = "url('./Images/w3.png')";
   }
   else
   {
-    document.getElementsByClassName("tank")[0].style.backgroundImage =" url('images/w2.png')";
+    document.getElementsByClassName("tank")[0].style.backgroundImage =" url('./Images/w2.png')";
   }
   document.getElementById("condDiv").style.visibility="hidden";
   gotoSetup();
@@ -1210,11 +1210,11 @@ function setLPH(sideLPH)
 	if(eaLPH === 0 && shLPH === 0)
 	{
 		document.getElementById("rain").style.height="0";
-		document.getElementsByClassName("tank")[0].style.backgroundImage = "url('images/w3.png')";
+		document.getElementsByClassName("tank")[0].style.backgroundImage = "url('./Images/w3.png')";
 	}
 	else
 	{
-		document.getElementsByClassName("tank")[0].style.backgroundImage =" url('images/w2.png')";
+		document.getElementsByClassName("tank")[0].style.backgroundImage =" url('./Images/w2.png')";
 	}
 	document.getElementById("condDiv").style.visibility="visible";
 	if(eaLPH && shLPH) 
