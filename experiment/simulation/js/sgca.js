@@ -1,91 +1,165 @@
-let reactTemp=0, rateConst=0, freqFact=0, actEng=0;
-//on click of next button
+
+
+let totVol = 1000,
+  eaConc = 0.02,
+  shConc = 0.02,
+  setTemp = 30;
+  // k = 0;
+const e = 2.7182818284590452353602874713527;
+let eaLPH = 0,
+  shLPH = 0;
+let settop = 100;
+let oldAngle = 0;
+let leftMotorPos = 220;
+let rightMotorPos = 220;
+let liquidPos = { top: 235, height: 10 };
+let imgIndex = 0;
+let waveIndex = 0;
+let naohSetFirst = false;
+let ethyleSetFirst = false;
+let naohEthyleSet = 0;
+let rotameterImages = [
+  "./Images/202.svg",
+  "./Images/204.svg",
+  "./Images/205.svg",
+  "./Images/207.svg",
+  "./Images/209.svg",
+  "./Images/210.svg",
+];
+let waveImages = ["./Images/191.svg", "./Images/192.svg"];
+let oldCond = 0;
+let actCond = 0;
+let tau = 0;
+let CaO = 0;
+let CbO = 0;
+let molRatio = 0;
+let Xa = 0;
+let Ca = 0;
+let Cb = 0;
+let condAmb = 0;
+let Cas,Cbs,Va,Vb,V,M,T,k,exp;
+
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("nextButton").style.visibility = "hidden";
+  // document.getElementById("nextButton").style.visibility = "hidden";
   setTimeout(() => {
     var start = document.getElementById("start");
     start.innerText = "Reaction Kinetic studies in Plug Flow reactor";
-    start.style.fontSize = "30px";
+    start.style.fontSize = "xx-large";
     start.classList.add("content-shine");
-    start.style.left = "410px";
-    start.style.top = "170px";
+
+    
     document.getElementById("landingPageButton").style.visibility = "visible";
     document.getElementById("landingPageButton").style.cursor = "pointer";
     document.getElementById("landingPageButton").onclick = function () {
       gotoPage1();
     };
-  }, 2000);
+  }, 3000);
+  const blinkingDiv = document.querySelector('#buttonsListEval2');
+  const toggleButton = document.getElementById('evaluateButtonFromData');
+  const inputText1 = document.getElementById('rateConstEval');
+  const inputText2 = document.getElementById('freqFactor');
+  const inputText3 = document.getElementById('activationEnergy');
+  let isBlinking = false;
+  let blinkInterval;
+
+  function blinkBorder() {
+
+      const isTransparent = blinkingDiv.style.borderColor === 'transparent';
+      blinkingDiv.style.borderColor = isTransparent ? '#089b93' : 'transparent';
+      blinkingDiv.style.boxShadow = isTransparent ? '0 0 10px 5px #089b93' : '0 0 0 0 transparent';
+  }
+
+  function toggleBlinking() {
+    if (isBlinking) {
+        stopBlinking();
+    } else {
+        startBlinking();
+    }
+}
+
+
+  function startBlinking() {
+    if (inputText1.value.trim() !== '' && inputText2.value.trim() !== '' && inputText3.value.trim() !== '') {
+        blinkInterval = setInterval(blinkBorder, 500);
+    
+        isBlinking = true;
+    } 
+    
+}
+
+  function stopBlinking() {
+    clearInterval(blinkInterval);
+    blinkingDiv.style.borderColor = 'transparent'; 
+
+}
+  blinkingDiv.addEventListener('click', function() {
+    if (isBlinking) {
+        stopBlinking();
+        blinkingDiv.style.borderColor =  'transparent';
+        blinkingDiv.style.boxShadow =  '0 0 0 0 transparent';
+        isBlinking = false;
+    }
+});
+  toggleButton.addEventListener('click', toggleBlinking);
+
+
+
 });
 
 //erin
 function goToStart(id) {
   var s = document.getElementById(id);
   s.innerText = "Click to choose Experiment or Evaluation";
-  s.onclick = function() {
-          document.getElementById('canvas1').style.visibility = "visible";
-          document.getElementById('canvas5').style.visibility = "hidden";
-          document.getElementById('canvas4').style.visibility = "hidden";
-          document.getElementById('canvas3').style.visibility = "hidden";
-          document.getElementById('canvas6').style.visibility = "hidden";
-          document.getElementById('canvas2').style.visibility = "hidden";
-          document.getElementById('displayExpValues').style.visibility = "hidden";
-          document.getElementById('demoOne').style.visibility = "hidden";
-          document.getElementById('configExp').style.visibility = "hidden";
-          document.getElementById('evaluatePart').style.visibility = "hidden";
-          //eriii
-          
-          
-          document.getElementById("restart").style.visibility = "hidden";
-          document.getElementById("goBackButton").style.visibility = "hidden";
-          document.getElementById("buttonsList").style.visibility = "hidden";
-          document.getElementById("buttonsListEval").style.visibility = "hidden";
-          document.getElementById("labelImage").style.visibility = "hidden";
-          document.getElementById("experimentSetup").style.visibility = "hidden";
-          document.getElementById("observations").style.visibility = "hidden";
-          document.getElementById("demoTwo").style.visibility = "hidden";
-          hideAllExperimentParts();
-          // console.log("hideworked");
-      }
-      // s.style.paddingTop="2px";
-  s.style.fontSize = "12px";
+  s.onclick = function () {
+ 
+    document.getElementById('canvas1').style.visibility = "visible";
+    document.getElementById('canvas5').style.visibility = "hidden";
+    document.getElementById('canvas4').style.visibility = "hidden";
+    document.getElementById('canvas3').style.visibility = "hidden";
+    document.getElementById('canvas6').style.visibility = "hidden";
+    document.getElementById('canvas2').style.visibility = "hidden";
+    document.getElementById('displayExpValues').style.visibility = "hidden";
+    document.getElementById("myClose").style.visibility="hidden";
+    document.getElementById('demoOne').style.visibility = "hidden";
+    document.getElementById('configExp').style.visibility = "hidden";
+    document.getElementById('evaluatePart').style.visibility = "hidden";
+    document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+    //eriii
+    document.getElementById("buttonsList").style.display ="none";
+    document.getElementById("buttonsList1").style.display ="none";
+    document.getElementById("buttonsList2").style.display ="none";
+    document.getElementById("buttonsList3").style.display ="none";
+    document.getElementById("buttonsListEval").style.display ="none";
+    document.getElementById("buttonsListEval1").style.display ="none";
+    document.getElementById("buttonsListEval2").style.display ="none";
 
-  /* margin:0px; */
-  // s.style.marginLeft="0px";
-  // xx-large
-  // s.style.fontSize ="15px";
-  //s.classList.add("title2 h3");
+    document.getElementById("restartExpt").style.visibility = "hidden";
+    document.getElementById("goBackButton").style.visibility = "hidden";
+    // document.getElementById("buttonsList").style.visibility = "hidden";
+    document.getElementById("buttonsListEval").style.visibility = "hidden";
+    document.getElementById("labelImage").style.visibility = "hidden";
+    document.getElementById("experimentSetup").style.visibility = "hidden";
+    document.getElementById("observations").style.visibility = "hidden";
+    document.getElementById("demoTwo").style.visibility = "hidden";
+    document.getElementById("myClose1").style.visibility="hidden";
+    hideAllExperimentParts();
+    // console.log("hideworked");
+  };
+  // s.style.paddingTop="2px";
+  s.style.fontSize = "11px";
+
+ 
 }
 
 function changeOriginal(id) {
   var r = document.getElementById(id);
-  r.innerText = "Reaction Kinetic Studies in Plug Flow Reactor";
-  //xx-large
-  // r.style.fontSize = "20px";
-  // r.style.paddingTop="2px";
-  // r.style.fontSize="15px";
-  // r.style.animatearrowmarginLeft="40px";
-  //r.classList.add("title2 h3");
-
+  r.innerText = "Reaction kinetic studies in Plug Flow Reactor";
+  
 }
 // erin end
-
-// function changeSubTitle()
-// {
-	// document.getElementById("subTitle").innerHTML="Click to choose Experiment or Evaluation";
-// }
-
-// function changeSubTitleBack()
-// {
-	// document.getElementById("subTitle").innerHTML="Reaction kinetic studies in plug flow reactor";
-// }
-
-// function changeCanvas()
-// {
-	// console.log("hey");
-	// simsubscreennum=1;
-	// gotoPage1();
-// }
 
 function gotoPage1() {
   for (temp = 0; temp <= 4; temp++) {
@@ -105,7 +179,7 @@ function navNext() {
   simsubscreennum += 1;
   document.getElementById("canvas" + simsubscreennum).style.visibility =
     "visible";
-  document.getElementById("nextButton").style.visibility = "hidden";
+  // document.getElementById("nextButton").style.visibility = "hidden";
   magic();
 }
 
@@ -124,205 +198,229 @@ function myStopFunction() {
 }
 
 //-------------------------------------function magic starts here----------------------------------------------------
-var dataOn = 0, observeDataOn=0;
-
-function magic() 
-{
-	if (simsubscreennum == 1) 
-	{
-		document.getElementById("experimentID").style.visibility = "hidden";
-		hide();
-	} 
-	else if (simsubscreennum == 2)
-	{
-		document.getElementById("experimentID").style.visibility = "hidden";
-		hide();
-		if (chosenActivity == 1) 
-		{
-			//console.log("One has chosen!");
-			document.getElementById("experimentSetup").style.visibility = "hidden";
-			document.getElementById("labelImage").style.visibility = "visible";
-			document.getElementById("nextButton").style.visibility = "hidden";
-			document.getElementById("configExp").style.visibility = "hidden";
-		} 
-		else
-		{
-			//console.log("2 has chosen");
-			document.getElementById("step2Heading").innerText = "Choose";
-			document.getElementById("configExp").style.visibility = "visible";
-			document.getElementById("nextButton").style.visibility = "hidden";
-		}
-		document.getElementById("evaluateButtonFromData").onclick=function()
-		{
-			reactTemp=document.getElementById("reactionTempEval").value;
-			rateConst=document.getElementById("rateConstEval").value;
-			freqFact=document.getElementById("freqFactor").value;
-			actEng=document.getElementById("activationEnergy").value;
-			if(!reactTemp || reactTemp == null || !rateConst || rateConst==null || !freqFact || freqFact==null || actEng ==null|| !actEng)
-			{
-				alert(" Enter appropriate values in the input field to proceed....");
-			}
-			else
-			{
-				document.getElementById("highlightEvaluation").style.visibility="visible";
-				addEvaluationFormReadingsToTable(reactTemp,rateConst,freqFact,actEng);
-			}
-		}
-		document.getElementById("clearEvaluationReadings").onclick=function()
-		{
-			clearTableRows("configInputTable");
-			clearTableRows("configSimulatedTable");
-		}
-	}
-	else if (simsubscreennum == 3) 
-	{
-		hide();
-		if (chosenActivity == 1)
-		{
-			document.getElementById("labelImage").style.visibility = "hidden";
-			document.getElementById("experimentSetup").style.visibility = "visible";
-			document.getElementById("nextButton").style.visibility = "hidden";
-			document.getElementById("evaluatePart").style.visibility = "hidden";
-		}
-		else 
-		{
-			//console.log("2 has chosen");
-			document.getElementById("configExp").style.visibility = "hidden";
-			document.getElementById("nextButton").style.visibility = "hidden";
-			document.getElementById("evaluatePart").style.visibility = "visible";
-		}
-	} else if (simsubscreennum == 4) {
-	  	document.getElementById("restart").style.visibility = "visible";
-		document.getElementById("goBackButton").style.visibility = "visible";
-		document.getElementById("obserButton").style.visibility = "visible";
+var dataOn = 0,
+  observeDataOn = 0;
+  function hide()
+  {
+   
+    document.getElementById("displayExpValues").style.visibility = "hidden";
+    document.getElementById("observations").style.visibility = "hidden";
+    document.getElementById("myClose1").style.visibility="hidden";
+  
+    document.getElementById("goBackButton").style.visibility = "hidden";
+    document.getElementById("obserButton").style.visibility = "hidden";
+    document.getElementById("condDiv").style.visibility = "hidden";
+    document.getElementById("msg").style.visibility = "hidden";
+      document.getElementById("observeTable").style.visibility = "hidden";
+  }
+function magic() {
+  if (simsubscreennum == 1) {
     document.getElementById("observeTable").style.visibility = "hidden";
-    if (chosenActivity == 1) {
-      document.getElementById("nextButton").style.visibility = "hidden";
-      document.getElementById("step4Heading").innerText = "Experiment";
-      document.getElementById("obserButton").onclick = "";
-      document.getElementById("goBackButton").onclick = function () {
-        document.getElementById("emailSend").style.visibility = "hidden";
-        document.getElementById("noteremsel").style.visibility = "hidden";
-        
-        
-        // erin
-        if (dataOn == 0) {
-            document.getElementById("displayExpValues").style.visibility ="visible";
-            document.getElementById("observations").style.visibility = "hidden";
-            document.getElementById("restart").style.visibility = "hidden";
-            dataOn = 1;
-            console.log(dataOn);
-        } else if (dataOn == 1) {
-            document.getElementById("displayExpValues").style.visibility ="hidden";
-            document.getElementById("observations").style.visibility = "hidden";
-            document.getElementById("restart").style.visibility = "visible";
-            dataOn = 0;
-            console.log(dataOn);
+    document.getElementById("experimentID").style.visibility = "hidden";
+    document.getElementById("restartExpt").style.visibility = "hidden";
+    document.getElementById("goBackButton").style.visibility = "hidden";
+    document.getElementById("obserButton").style.visibility = "hidden";
+    hide();
+  } 
+ 
+  else if (simsubscreennum == 2)
+    {
+      document.getElementById("experimentID").style.visibility = "hidden";
+      document.getElementById("restartExpt").style.visibility = "hidden";
+      document.getElementById("goBackButton").style.visibility = "hidden";
+      document.getElementById("obserButton").style.visibility = "hidden";
+      document.getElementById("observeTable").style.visibility = "hidden";
+      hide();
+      if (chosenActivity == 1) 
+      {
+        //console.log("One has chosen!");
+        document.getElementById("experimentSetup").style.visibility = "hidden";
+        document.getElementById("labelImage").style.visibility = "visible";
+        // document.getElementById("nextButton").style.visibility = "hidden";
+        document.getElementById("configExp").style.visibility = "hidden";
+        document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+      } 
+      else
+      {
+        //console.log("2 has chosen");
+        // document.getElementById("step2Heading").innerText = "Choose";
+        document.getElementById("configExp").style.visibility = "visible";
+        document.getElementById('evaluateButtonFromData').style.visibility = "visible";
+        // document.getElementById("nextButton").style.visibility = "hidden";
+        document.getElementById("labelImage").style.visibility = "hidden";
+      }
+      document.getElementById("evaluateButtonFromData").onclick=function()
+      {
+        reactTemp=document.getElementById("reactionTempEval").value;
+        rateConst=document.getElementById("rateConstEval").value;
+        freqFact=document.getElementById("freqFactor").value;
+        actEng=document.getElementById("activationEnergy").value;
+        if(!reactTemp || reactTemp == null || !rateConst || rateConst==null || !freqFact || freqFact==null || actEng ==null|| !actEng)
+        {
+          alert(" Enter appropriate values in the input field to proceed....");
         }
-      };
-	  document.getElementById("obserButton").onclick = function ()
-	  {
+        else
+        {
+          document.getElementById("highlightEvaluation").style.visibility="visible";
+          addEvaluationFormReadingsToTable(reactTemp,rateConst,freqFact,actEng);
+        }
+      }
+      document.getElementById("clearEvaluationReadings").onclick=function()
+      {
+        clearTableRows("configInputTable");
+        clearTableRows("configSimulatedTable");
+      }
+    }
+
+ 
+  else if (simsubscreennum == 3) 
+    {
+      document.getElementById("observeTable").style.visibility = "hidden";
+      hide();
+      if (chosenActivity == 1)
+      {
+        document.getElementById("labelImage").style.visibility = "hidden";
+        document.getElementById("experimentSetup").style.visibility = "visible";
+        // document.getElementById("nextButton").style.visibility = "hidden";
+        document.getElementById("evaluatePart").style.visibility = "hidden";
+         document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+      }
+      else 
+      {
+        //console.log("2 has chosen");
+        document.getElementById("configExp").style.visibility = "hidden";
+        // document.getElementById("nextButton").style.visibility = "hidden";
+        document.getElementById("evaluatePart").style.visibility = "visible";
+        document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+      }
+    }
+ 
+  else if (simsubscreennum == 4) {
+    document.getElementById("restartExpt").style.visibility = "visible";
+  document.getElementById("goBackButton").style.visibility = "visible";
+  document.getElementById("obserButton").style.visibility = "visible";
+  document.getElementById("observeTable").style.visibility = "hidden";
+  if (chosenActivity == 1) {
+    // document.getElementById("nextButton").style.visibility = "hidden";
+    document.getElementById("step4Heading").innerText = "Experiment";
+    document.getElementById("obserButton").onclick = "";
+    document.getElementById("goBackButton").onclick = function () {
+      document.getElementById("emailSend").style.visibility = "hidden";
+      document.getElementById("noteremsel").style.visibility = "hidden";
+      
       
       // erin
-    document.getElementById("emailSend").style.visibility = "hidden";
-    document.getElementById("noteremsel").style.visibility = "hidden";
+      if (dataOn == 0) {
+          document.getElementById("displayExpValues").style.visibility ="visible";
+          document.getElementById("observations").style.visibility = "hidden";
+          // document.getElementById("restartExpt").style.visibility = "hidden";
+          document.getElementById("myClose").style.visibility="visible";
+          dataOn = 1;
+          console.log(dataOn);
+      } else if (dataOn == 1) {
+          document.getElementById("displayExpValues").style.visibility ="hidden";
+          document.getElementById("observations").style.visibility = "hidden";
+          document.getElementById("myClose").style.visibility="hidden";
+          // document.getElementById("restartExpt").style.visibility = "visible";
+          dataOn = 0;
+          console.log(dataOn);
+      }
+    };
+    document.getElementById("experimentSetup").style.visibility = "hidden";
+    document.getElementById("experimentID").style.visibility = "visible";
+    document.getElementById("restartExpt").style.visibility = "visible";
+    document.getElementById("goBackButton").style.visibility = "visible";
+    document.getElementById("obserButton").style.visibility = "visible";
+  document.getElementById("obserButton").onclick = function ()
+  {
     
-    
-		 document.getElementById("highlight").style.visibility="hidden";
-     if (observeDataOn == 0) {
-      // document.getElementById("").onclick
-      document.getElementById("observations").style.visibility = "visible";
-      document.getElementById("displayExpValues").style.visibility = "hidden";
-      document.getElementById("restart").style.visibility = "hidden";
-      console.log("obserButton ",observeDataOn);
-      observeDataOn = 1;
-  } else if (observeDataOn == 1) {
-      document.getElementById("observations").style.visibility ="hidden";
-      document.getElementById("restart").style.visibility = "visible";
-          // document.getElementById("goBackButton").style.visibility = "visible";
-          console.log("obserButton ",observeDataOn);
-      observeDataOn = 0;
-        }
-      };
-      document.getElementById("experimentSetup").style.visibility = "hidden";
-      document.getElementById("nextButton").style.visibility = "hidden";
-
-      document.getElementById("experimentID").style.visibility = "visible";
-      document.getElementById("obserButton").style.visibility = "visible";
-    } else {
-     // console.log("2 has chosen");
-    }
-	document.getElementById("restart").onclick=function()
-	{
-		document.getElementById("highlight").style.visibility = "hidden";
-		document.getElementById("experimentID").style.visibility = "hidden";
-		document.getElementById("restart").style.visibility = "hidden";
-		document.getElementById("goBackButton").style.visibility = "hidden";
-		document.getElementById("obserButton").style.visibility = "hidden";
-		document.getElementById("condDiv").style.visibility = "hidden";
-		document.getElementById("msg").style.visibility = "hidden";
-		document.getElementById("leftMotor").style.top="220px";
-		document.getElementById("rightMotor").style.top="220px";
-		eaLPH=0; shLPH=0;
-		document.getElementById("lR").innerHTML = `${eaLPH} LPH`;
-		document.getElementById("rR").innerHTML = `${shLPH} LPH`;
-		if(eaLPH === 0 && shLPH === 0)
-		{
-			document.getElementById("rain").style.height="0";
-			document.getElementsByClassName("tank")[0].style.backgroundImage = "url('./Images/w3.png')";
-		}
-		else
-		{
-			document.getElementsByClassName("tank")[0].style.backgroundImage =" url('./Images/w2.png')";
-		}
-		document.getElementById("condDiv").style.visibility="hidden";
-		gotoSetup();
-	}
-	//delete only table rows (table heading remains)
-	document.getElementById("clearTable").onclick=function()
-	{
     // erin
-    document.getElementById("emailSend").style.visibility = "hidden";
-    document.getElementById("noteremsel").style.visibility = "hidden";
-    
+  document.getElementById("emailSend").style.visibility = "hidden";
+  document.getElementById("noteremsel").style.visibility = "hidden";
+  
+  
+  //  document.getElementById("highlight").style.visibility="hidden";
+   if (observeDataOn == 0) {
+    // document.getElementById("").onclick
+    document.getElementById("observations").style.visibility = "visible";
+    document.getElementById("myClose1").style.visibility="visible";
+    document.getElementById("displayExpValues").style.visibility = "hidden";
+    // document.getElementById("restartExpt").style.visibility = "hidden";
+    console.log("obserButton ",observeDataOn);
+    observeDataOn = 1;
+} else if (observeDataOn == 1) {
+    document.getElementById("observations").style.visibility ="hidden";
+    document.getElementById("myClose1").style.visibility="hidden";
+    // document.getElementById("restartExpt").style.visibility = "visible";
+        // document.getElementById("goBackButton").style.visibility = "visible";
+        console.log("obserButton ",observeDataOn);
+    observeDataOn = 0;
+      }
+    };
+    document.getElementById("experimentSetup").style.visibility = "hidden";
+    // document.getElementById("nextButton").style.visibility = "hidden";
 
-		clearTableRows("observTable");
-	}
+    document.getElementById("experimentID").style.visibility = "visible";
+    document.getElementById("restartExpt").style.visibility = "visible";
+    document.getElementById("goBackButton").style.visibility = "visible";
+    document.getElementById("obserButton").style.visibility = "visible";
+    // document.getElementById("obserButton").style.visibility = "visible";
+  } else {
+   // console.log("2 has chosen");
   }
-  else if (simsubscreennum == 6)
-	{
-		hide();
-		if (chosenActivity == 1) {
-		  document.getElementById("observeTable").style.visibility = "hidden";
-		  document.getElementById("experimentSetup").style.visibility = "hidden";
-		  document.getElementById("labelImage").style.visibility = "hidden";
-		  document.getElementById("nextButton").style.visibility = "hidden";
-		}
-	}
+document.getElementById("restartExpt").onclick=function()
+{
+  // document.getElementById("highlight").style.visibility = "hidden";
+  document.getElementById("experimentID").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("goBackButton").style.visibility = "hidden";
+  document.getElementById("obserButton").style.visibility = "hidden";
+  document.getElementById("condDiv").style.visibility = "hidden";
+  // document.getElementById("msg").style.visibility = "hidden";
+  document.getElementById("leftMotor").style.top="220px";
+  document.getElementById("rightMotor").style.top="220px";
+  eaLPH=0; shLPH=0;
+  document.getElementById("lR").innerHTML = `${eaLPH} LPH`;
+  document.getElementById("rR").innerHTML = `${shLPH} LPH`;
+  if(eaLPH === 0 && shLPH === 0)
+  {
+    document.getElementById("rain").style.height="0";
+    document.getElementsByClassName("tank")[0].style.backgroundImage = "url('./Images/w3.png')";
+  }
+  else
+  {
+    document.getElementsByClassName("tank")[0].style.backgroundImage =" url('./Images/w2.png')";
+  }
+  document.getElementById("condDiv").style.visibility="hidden";
+  gotoSetup();
+}
+//delete only table rows (table heading remains)
+document.getElementById("clearTable").onclick=function()
+{
+  // erin
+  document.getElementById("emailSend").style.visibility = "hidden";
+  document.getElementById("noteremsel").style.visibility = "hidden";
+  
+
+  clearTableRows("observTable");
+}
+}
+  else if (simsubscreennum == 6) {
+    if (chosenActivity == 1) {
+      document.getElementById("observeTable").style.visibility = "hidden";
+      document.getElementById("experimentSetup").style.visibility = "hidden";
+      document.getElementById("labelImage").style.visibility = "hidden";
+      // document.getElementById("nextButton").style.visibility = "hidden";
+    }
+  }
 }
 
-function hide()
-{
-	// document.getElementById("clearTable").style.visibility = "hidden";
-	document.getElementById("displayExpValues").style.visibility = "hidden";
-	document.getElementById("observations").style.visibility = "hidden";
-	document.getElementById("highlight").style.visibility = "hidden";
-	document.getElementById("restart").style.visibility = "hidden";
-	document.getElementById("goBackButton").style.visibility = "hidden";
-	document.getElementById("obserButton").style.visibility = "hidden";
-	document.getElementById("condDiv").style.visibility = "hidden";
-	document.getElementById("msg").style.visibility = "hidden";
-    document.getElementById("observeTable").style.visibility = "hidden";
-}
-
-function clearTableRows(tableId)
-{
-	var rows = document.getElementById(tableId).rows;
-	var i = rows.length;
-	while (--i) 
-	{
-		rows[i].parentNode.removeChild(rows[i]);
-	}
+function clearTableRows(tableId) {
+  var rows = document.getElementById(tableId).rows;
+  var i = rows.length;
+  while (--i) {
+    rows[i].parentNode.removeChild(rows[i]);
+  }
 }
 
 function gotoPage5() {
@@ -335,33 +433,94 @@ function gotoPage5() {
   document.getElementById("titleLarge").style.visibility = "hidden";
   document.getElementById("titleSmall").style.visibility = "visible";
   if (chosenActivity == 1) {
-    document.getElementById("buttonsList").style.visibility = "visible";
+    // document.getElementById("buttonsList").style.visibility = "visible";
     document.getElementById("demoButton").style.cursor = "pointer";
+    document.getElementById("buttonsList").style.display="block";
+        document.getElementById("buttonsList1").style.display="block";
+        document.getElementById("buttonsList2").style.display="block";
+        document.getElementById("buttonsList3").style.display="block";
+        document.getElementById("demoButton").style.cursor = "pointer";
+        document.getElementById("buttonsList1").style.opacity = "0.3";
+        document.getElementById("buttonsList2").style.opacity = "0.3";
+        document.getElementById("buttonsList3").style.opacity = "0.3";
+        document.getElementById("buttonsListEval").style.display="none"
+        document.getElementById("buttonsListEval1").style.display ="none";
+        document.getElementById("buttonsListEval2").style.display ="none";
     // document.getElementById("labelButton").style.cursor = "pointer";
     document.getElementById("demoButton").onclick = function () {
       document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
+      // hideAllExperimentParts();
       goto6th();
     };
   } else if (chosenActivity == 2) {
+    document.getElementById("buttonsListEval").style.display="block"
+    document.getElementById("buttonsListEval1").style.display ="block";
+    document.getElementById("buttonsListEval2").style.display ="block";
+    document.getElementById("buttonsListEval1").style.opacity = "0.3";
+    document.getElementById("buttonsListEval2").style.opacity = "0.3";
+    console.log("evaluation")
+    document.getElementById("buttonsList").style.display="none"
+    document.getElementById("buttonsList1").style.display="none"
+    document.getElementById("buttonsList3").style.display="none"
+    document.getElementById("buttonsList2").style.display="none"
     document.getElementById("buttonsListEval").style.visibility = "visible";
     document.getElementById("demoButtonEval").style.cursor = "pointer";
     // document.getElementById("labelButton").style.cursor = "pointer";
-    document.getElementById("demoButtonEval").onclick = function () 
-	{
-		document.getElementById("demoTwo").style.visibility = "visible";
-		document.getElementById("configExp").style.visibility="hidden";
+    document.getElementById("demoButtonEval").onclick = function () {
+      document.getElementById("demoTwo").style.visibility = "visible";
+      document.getElementById("buttonsListEval1").style.opacity = "1";
+// document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
       document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
 
       goto6th();
     };
   }
-  // document.getElementById("labelButton").onclick = function(){
-  // 	gotoLabel();
-  // }
+ 
 }
 
+function mclose(){
+	document.getElementById("displayExpValues").style.visibility="hidden";
+    document.getElementById("myClose").style.visibility="hidden";
+}
+
+function mclose1(){
+	document.getElementById("observations").style.visibility="hidden";
+    document.getElementById("myClose1").style.visibility="hidden";
+    document.getElementById("observeTable").style.visibility = "hidden";
+        // document.getElementById("remSelRead").style.visibility = "hidden";
+        // document.getElementById("remAllRead").style.visibility = "hidden";
+        // document.getElementById("emailTable").style.visibility = "hidden";
+        document.getElementById("noteremsel").style.visibility = "hidden";
+        document.getElementById("emailSend").style.visibility = "hidden";
+       
+        // document.getElementById("addtoTableButton").style.visibility = "hidden";
+        gotoExp();
+}
+function showObservation() {
+  console.log("showobsertbvation");
+  // document.getElementById("highlight").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("noteremsel").style.visibility = "hidden";
+
+  if (observeDataOn == 0) {
+    // document.getElementById("").onclick
+    document.getElementById("observations").style.visibility = "visible";
+    document.getElementById("myClose1").style.visibility="visible";
+    console.log("observevisible");
+    document.getElementById("displayExpValues").style.visibility = "hidden";
+    document.getElementById("myClose").style.visibility="hidden";
+
+    // observeDataOn = 1;
+   } 
+ 
+}
+
+
+
 function goto6th() {
- // console.log("At 6th canvas");
+  //   console.log("At 6th canvas");
   for (temp = 0; temp <= 6; temp++) {
     document.getElementById("canvas" + temp).style.visibility = "hidden";
   }
@@ -370,27 +529,25 @@ function goto6th() {
     "visible";
   magic();
 
-	if (chosenActivity == 1) 
-	{
-		document.getElementById("demoOne").style.visibility = "visible";
-		document.getElementById("labelButton").style.cursor = "pointer";
-		document.getElementById("labelButton").onclick = function ()
-		{
-			document.getElementById("displayExpValues").style.visibility = "hidden";
-			gotoLabel();
-		};
-	} 
-	else if (chosenActivity == 2) 
-	{
-		document.getElementById("demoTwo").style.visibility = "visible";
-		document.getElementById("labelButtonEval").style.cursor = "pointer";
-		document.getElementById("labelButtonEval").onclick = function () 
-		{
-			document.getElementById("demoTwo").style.visibility = "hidden";
-			document.getElementById("displayExpValues").style.visibility = "hidden";
-			gotoLabel();
-		};
-	}
+  if (chosenActivity == 1) {
+    document.getElementById("demoOne").style.visibility = "visible";
+    document.getElementById("buttonsList1").style.opacity = "1";
+    document.getElementById("labelButton").style.cursor = "pointer";
+    document.getElementById("labelButton").onclick = function () {
+      document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
+      // hideAllExperimentParts();
+      gotoLabel();
+    };
+  } else if (chosenActivity == 2) {
+    document.getElementById("demoTwo").style.visibility = "visible";
+    document.getElementById("labelButtonEval").style.cursor = "pointer";
+    document.getElementById("labelButtonEval").onclick = function() {
+      document.getElementById("demoTwo").style.visibility = "hidden";
+      document.getElementById("buttonsListEval2").style.opacity = "1";
+      gotoLabel();
+  }
+  }
 }
 
 function gotoLabel() {
@@ -405,99 +562,121 @@ function gotoLabel() {
   if (chosenActivity == 1) {
     document.getElementById("demoButton").onclick = function () {
       document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
 
       goto6th();
     };
     document.getElementById("setupButton").style.cursor = "pointer";
+    document.getElementById("buttonsList2").style.opacity = "1";
     document.getElementById("setupButton").onclick = function () {
+       // erin
+       document.getElementById("buttonsList3").style.opacity = "1";
       document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
+      // hideAllExperimentParts();
+      resetClicked = false;
 
       gotoSetup();
     };
-	} 
-	else if (chosenActivity == 2) 
-	{
-		document.getElementById("demoButtonEval").onclick = function () 
-		{
-			document.getElementById("demoTwo").style.visibility = "visible";
-			document.getElementById("displayExpValues").style.visibility = "hidden";
-			document.getElementById("configExp").style.visibility="hidden";
-			goto6th();
-		};
-		document.getElementById("setupButtonEval").style.cursor = "pointer";
-		document.getElementById("setupButtonEval").onclick = function () 
-		{
-			document.getElementById("highlightEvaluation").style.visibility="hidden";
-			document.getElementById("displayExpValues").style.visibility = "hidden";
-			document.getElementById("configExp").style.visibility="hidden";
-			gotoSetup();
-		};
-	}
+  } else if (chosenActivity == 2) {
+    document.getElementById("demoButtonEval").onclick = function () {
+      document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
+      document.getElementById("demoTwo").style.visibility = "visible";
+      //erii
+      document.getElementById("configExp").style.visibility = "hidden";
+      document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+      document.getElementById("canvas2").style.visibility = "hidden";
+
+      //   console.log("Pressed demo");
+
+      // document.getElementById("configExp").style.visibility = "hidden";
+      goto6th();
+    };
+    document.getElementById("setupButtonEval").style.cursor = "pointer";
+    document.getElementById("setupButtonEval").onclick = function () {
+      document.getElementById("displayExpValues").style.visibility = "hidden";
+      document.getElementById("myClose").style.visibility="hidden";
+      // document.getElementById("highlightEvaluation").style.visibility =
+      //   "hidden";
+
+      gotoSetup();
+    };
+  }
+}
+//delete only table rows (table heading remains)
+function clearTable() {
+  document.getElementById("noteremsel").style.visibility = "hidden";
+  document.getElementById("emailSend").style.visibility = "hidden";
+  document.getElementById("emailreq").style.visibility = "hidden";
+
+  var rows = document.getElementById("observTable").rows;
+  var i = rows.length;
+  while (--i) {
+    rows[i].parentNode.removeChild(rows[i]);
+  }
 }
 
-// erin 08092021 
+
 function emailSend() {
   // console.log("email button clicked");
   document.getElementById("emailSend").style.visibility = "visible";
   document.getElementById("emailreq").style.visibility = "hidden";
   document.getElementById("noteremsel").style.visibility = "hidden";
- 
 }
 var emid;
 
 function sendEmail() {
-
-  var emid1 = document.getElementById('emailR');
+  var emid1 = document.getElementById("emailR");
   // console.log(emid1);
   emidlen = emid1.value.length;
   // console.log("email length is " + emidlen);
   if (emidlen > 0) {
-      // console.log("send button clicked");
+    // console.log("send button clicked");
 
-      // console.log(emid);
+    // console.log(emid);
 
-      document.getElementById("info").innerHTML = "";
-      var myTab = document.getElementById("observTable");
+    document.getElementById("info").innerHTML = "";
+    var myTab = document.getElementById("observTable");
 
-      // LOOP THROUGH EACH ROW OF THE TABLE AFTER HEADER.
-      for (i = 0; i < myTab.rows.length; i++) {
+    // LOOP THROUGH EACH ROW OF THE TABLE AFTER HEADER.
+    for (i = 0; i < myTab.rows.length; i++) {
+      // GET THE CELLS COLLECTION OF THE CURRENT ROW.
+      var objCells = myTab.rows.item(i).cells;
 
-          // GET THE CELLS COLLECTION OF THE CURRENT ROW.
-          var objCells = myTab.rows.item(i).cells;
-
-          // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
-          for (var j = 0; j < objCells.length; j++) {
-              info.innerHTML = info.innerHTML + "         " + objCells.item(j).innerHTML;
-          }
-          info.innerHTML = info.innerHTML + '%0D%0A%0D'; // ADD A BREAK (TAG).
+      // LOOP THROUGH EACH CELL OF THE CURENT ROW TO READ CELL VALUES.
+      for (var j = 0; j < objCells.length; j++) {
+        info.innerHTML =
+          info.innerHTML + "         " + objCells.item(j).innerHTML;
       }
-      // console.log("body is filled" + info);
-      var mailBody = document.getElementById("info").innerHTML;
-      window.location = "mailto:" + emid + "?subject=The Observation Data &body=" + mailBody;
+      info.innerHTML = info.innerHTML + "%0D%0A%0D"; // ADD A BREAK (TAG).
+    }
+    // console.log("body is filled" + info);
+    var mailBody = document.getElementById("info").innerHTML;
+    window.location =
+      "mailto:" + emid + "?subject=The Observation Data &body=" + mailBody;
 
-      // console.log("data sent to mail");
-
+    // console.log("data sent to mail");
   } else {
-      // console.log("else is executing");
-      document.getElementById("emailreq").style.visibility = "visible";
+    // console.log("else is executing");
+    document.getElementById("emailreq").style.visibility = "visible";
   }
 }
 
 function setemail(val) {
-  emid = val
+  emid = val;
   // console.log(emid);
 }
 
 function remSelRead() {
-   console.log("remove selected");
+  //   console.log("remove selected");
   document.getElementById("emailreq").style.visibility = "hidden";
   document.getElementById("emailSend").style.visibility = "hidden";
   document.getElementById("noteremsel").style.visibility = "visible";
 
-  var tableRef = document.getElementById('observTable');
+  var tableRef = document.getElementById("observTable");
   var tableRows = tableRef.rows;
-  console.log("tableRows length",tableRows.length);
-
+  //   console.log("tableRows length", tableRows.length);
 
   if (!document.getElementsByTagName || !document.createTextNode) return;
   // var table = document.getElementById('observeTable');
@@ -505,58 +684,15 @@ function remSelRead() {
   // var rows = document.getElementById('observeTable').getElementsByTagName('thead')[0].getElementsByTagName('tr');
   // console.log("rows ",rows.length);
   for (i = 1; i < tableRows.length; i++) {
-      tableRows[i].onclick = function() {
-          //alert(this.rowIndex + 1);
-          idx = this.rowIndex;
-          // console.log(idx);
-          tableRef.deleteRow(idx);
-
-      }
+    tableRows[i].onclick = function () {
+      //alert(this.rowIndex + 1);
+      idx = this.rowIndex;
+      // console.log(idx);
+      tableRef.deleteRow(idx);
+    };
   }
-  // var checkedIndexes = [];
-  // for (var i = 0; i < tableRows.length; i++) {
-  //   var checkboxSelected = tableRows[i].cells[0].children[0].checked;
-  //   if (checkboxSelected) {
-  //     checkedIndexes.push(i);
-  //   }
-  // }
-
-  // for (var k = checkedIndexes.length - 1; k >= 0; k--) {
-  //   tableRef.deleteRow(checkedIndexes[k]);
-  // }
-  // if (!document.getElementsByTagName || !document.createTextNode) return;
-  // console.log("mid step");
-  // var table = document.getElementById('observTable');
-  // var idx = 0;
-  // var rows = table.getElementsByTagName('thead')[0].getElementsByTagName('tr');
-  // var  selected = table.getElementsByClassName('selected');
-  // table.onclick = highlight;
-  // console.log("selected ",selected);
-  // function highlight(e) {
-  //     if (selected[0]) selected[0].className = '';
-  //     e.target.parentNode.className = 'selected';
-  //     console.log("selected row ",selected);
-  //     idx=selected.rowIndex;
-  //     table.deleteRow(idx);
-  // }
   
-//    console.log("row lenght ",rows.length);
-//     for (i = 1; i < rows.length; i++) {
-//         rows[i].onclick = function() {
-// console.log("i value=",i);
-//             // rows[i].parentNode.removeChild(rows[i]);
-//             //alert(this.rowIndex + 1);
-//             idx = this.rowIndex;
-//             console.log(idx);
-//              table.deleteRow(idx);
-
-  //     }
-  // }
 }
-
-
-
-
 
 function gotoSetup() {
   for (temp = 0; temp <= 6; temp++) {
@@ -570,26 +706,31 @@ function gotoSetup() {
   document.getElementById("expButton").style.cursor = "pointer";
   document.getElementById("expButton").onclick = function () {
     document.getElementById("displayExpValues").style.visibility = "hidden";
+    document.getElementById("myClose").style.visibility="hidden";
+    document.getElementById("msg").style.visibility = "hidden";
 
     document.getElementById("overflow").style.visibility = "hidden";
     gotoExp();
   };
   if (chosenActivity == 2) {
     document.getElementById("labelButtonEval").onclick = function () {
-		document.getElementById("demoTwo").style.visibility = "hidden";
+      document.getElementById("demoTwo").style.visibility = "hidden";
+      document.getElementById("buttonsListEval2").style.opacity = "1";
       goBacktoStep2Eval();
     };
     document.getElementById("demoButtonEval").onclick = function () {
-	document.getElementById("demoTwo").style.visibility = "visible";
-		document.getElementById("configExp").style.visibility="hidden";
+      document.getElementById("demoTwo").style.visibility = "visible";
+      document.getElementById("configExp").style.visibility="hidden";
+      document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
       goBacktoStep1Eval();
     };
   }
 }
 
 function goBacktoStep1Eval() {
-  //console.log("Going to 6th one");
+
   document.getElementById("configExp").style.visibility = "hidden";
+  document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
   document.getElementById("evaluatePart").style.visibility = "hidden";
   for (temp = 0; temp <= 6; temp++) {
     document.getElementById("canvas" + temp).style.visibility = "hidden";
@@ -601,7 +742,7 @@ function goBacktoStep1Eval() {
 }
 
 function goBacktoStep2Eval() {
- // console.log("Going to second");
+ 
   document.getElementById("evaluatePart").style.visibility = "hidden";
   for (temp = 0; temp <= 6; temp++) {
     document.getElementById("canvas" + temp).style.visibility = "hidden";
@@ -613,18 +754,17 @@ function goBacktoStep2Eval() {
   magic();
 }
 
+
+
 function gotoExp() {
-  // document.getElementById("w3").style.visibility = "visible";
-  // setInterval(function () {
-    // waterFlowMovement("w1", "w2");
-  // }, 500);
-  //console.log("Experiment part.");
+ 
 
    // erin
    document.getElementById("noteremsel").style.visibility = "hidden";
    document.getElementById("emailSend").style.visibility = "hidden";
    document.getElementById("emailreq").style.visibility = "hidden";
    document.getElementById("observations").style.visibility = "hidden";
+   document.getElementById("myClose1").style.visibility="hidden";
 
   for (temp = 0; temp <= 6; temp++) {
     document.getElementById("canvas" + temp).style.visibility = "hidden";
@@ -644,8 +784,7 @@ function gotoExp() {
     document.getElementById("overflow").style.visibility = "hidden";
 
     //console.log("clicked for setup");
-    document.getElementById("nextButton").style.visibility = "hidden";
-    document.getElementById("nextButton").style.zIndex = -1;
+  
 
     goBacktoStep2();
   };
@@ -664,17 +803,28 @@ function gotoExp() {
 }
 
 function hideAllExperimentParts() {
-  document.getElementById("displayExpValues").style.visibility = "hidden";
 
+  document.getElementById("displayExpValues").style.visibility = "hidden";
+  document.getElementById("myClose").style.visibility="hidden";
+ 
   document.getElementById("overflow").style.visibility = "hidden";
   document.getElementById("experimentID").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("goBackButton").style.visibility = "hidden";
+  document.getElementById("obserButton").style.visibility = "hidden";
+  document.getElementById("condDiv").style.visibility = "hidden";
+  // document.getElementById("msg").style.visibility = "hidden";
   // document.getElementById("waterSteady").style.visibility = "hidden";
   document.getElementById("obserButton").style.visibility = "hidden";
+  document.getElementById("experimentSetup").style.visibility = "hidden";
+  document.getElementById("labelImage").style.visibility = "hidden";
 
   // erin
-  document.getElementById("emailSend").style.visibility = "hidden";
   document.getElementById("noteremsel").style.visibility = "hidden";
-  
+  document.getElementById("emailSend").style.visibility = "hidden";
+  document.getElementById("emailreq").style.visibility = "hidden";
+
+  // erinend
 
   document.getElementById("obserButton").style.visibility = "hidden";
 }
@@ -684,7 +834,7 @@ var chosenActivity;
 
 function selectAction(n) {
   chosenActivity = n;
-  // console.log(chosenActivity);
+  console.log(chosenActivity);
   simsubscreennum = 5;
   gotoPage5();
 }
@@ -694,43 +844,52 @@ var firstML = 1;
 
 function setMLone() {
   firstML = document.getElementById("firstMLValue").value;
-  // console.log(firstML);
+  console.log(firstML);
 }
 
 var secondML = 1;
 
 function setMLtwo() {
   firstML = document.getElementById("secondMLValue").value;
-  // console.log(firstML);
+  console.log(firstML);
 }
 
 function gotoObservation() {
   document.getElementById("step4Heading").innerText = "Observations";
   document.getElementById("experimentID").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("goBackButton").style.visibility = "hidden";
+  document.getElementById("obserButton").style.visibility = "hidden";
   document.getElementById("observeTable").style.visibility = "visible";
+  // document.getElementById("highlight").style.visibility = "hidden";
+
   document.getElementById("setupButton").onclick = function () {
     document.getElementById("displayExpValues").style.visibility = "hidden";
+    document.getElementById("myClose").style.visibility="hidden";
 
     document.getElementById("overflow").style.visibility = "hidden";
+    // resetClicked = false;
     goBacktoStep2();
   };
 }
 
 function goBacktoStep2() {
-  document.getElementById("nextButton").style.visibility = "hidden";
-  document.getElementById("nextButton").style.zIndex = -1;
-  document.getElementById("nextButton").style.visibility = "hidden";
+ 
   document.getElementById("experimentID").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("goBackButton").style.visibility = "hidden";
+  // document.getElementById("obserButton").style.visibility = "visible";
   document.getElementById("obserButton").style.visibility = "hidden";
   document.getElementById("observeTable").style.visibility = "hidden";
   //
-  document.getElementById("restart").style.visibility = "hidden";
+  document.getElementById("restartExpt").style.visibility = "hidden";
   document.getElementById("goBackButton").style.visibility = "hidden";
   document.getElementById("obserButton").style.visibility = "hidden";
   document.getElementById("observeTable").style.visibility = "hidden";
   document.getElementById("msg").style.visibility = "hidden";
   document.getElementById("displayExpValues").style.visibility = "hidden";
   document.getElementById("observations").style.visibility = "hidden";
+  document.getElementById("myClose1").style.visibility="hidden";
   document.getElementById("condDiv").style.visibility = "hidden";
 
   simsubscreennum = 3;
@@ -739,7 +898,7 @@ function goBacktoStep2() {
   document.getElementById("canvas" + simsubscreennum).style.visibility =
     "visible";
   document.getElementById("experimentSetup").style.visibility = "visible";
-  document.getElementById("nextButton").style.visibility = "visible";
+  // document.getElementById("nextButton").style.visibility = "visible";
 }
 
 // ============================  EVALUATION PART
@@ -808,16 +967,7 @@ function evaluateConfig() {
     // console.log("Radius is: ", diaMeter / 2);
     lpmConvVelocity =
       (lpm * 0.000017) / (3.14 * (diaMeter / 2) * (diaMeter / 2)); // convert lpm to m3/s              V E L O C I T Y
-    // console.log("Velocity value is: ", lpmConvVelocity);
-    // if(manoFluidEval == "Carbon tetrachloride"){
-    // 	visco = 0.901;
-    // }
-    // else if(manoFluidEval == "Mercury"){
-    // 	visco = 1.55;
-    // }
-    // console.log("Viscosity value of " + processFluid + " at 20 deg C is: ",);
-    // console.log("Density of " + processFluidEval + " fluid is: ", den);
-    // Calculate Reynold's
+    
     calculatedReyn = (den * diaMeter * lpmConvVelocity) / visco;
     calculatedReyn = calculatedReyn.toFixed(5); // ======    toFixed(5)
     // console.log("Calculated Reynold's value is: ", calculatedReyn);
@@ -881,25 +1031,6 @@ function evaluateConfig() {
   }
 }
 
-let settop = 100;
-let oldAngle = 0;
-let leftMotorPos = 220;
-let rightMotorPos = 220;
-let liquidPos = { top: 235, height: 10 };
-let imgIndex = 0;
-let waveIndex = 0;
-let naohSetFirst=false;
-let ethyleSetFirst=false;
-let naohEthyleSet=0;
-let rotameterImages = [
-  "./Images/202.svg",
-  "./Images/204.svg",
-  "./Images/205.svg",
-  "./Images/207.svg",
-  "./Images/209.svg",
-  "./Images/210.svg",
-];
-let waveImages = ["./Images/191.svg", "./Images/192.svg"];
 
 $(function () {
   // code to execute when the DOM is ready
@@ -990,13 +1121,8 @@ setInterval(() => {
   waveAnimation("liquidLid");
 }, 350);
 
-let totVol = 1,
-  eaConc = 0.02,
-  shConc = 0.02,
-  setTemp = 30;
- // k = 0;
-let eaLPH = 0,
-  shLPH = 0;
+
+
 
 // slider
 function rangeSlideEthyl(value) {
@@ -1010,18 +1136,6 @@ function rangeSlideNaOH(value) {
   document.getElementById("rangeValueNaOH").innerHTML = shConc + " M";
   document.getElementById("ohConce").innerHTML = shConc + " M";
 }
-
-let oldCond = 0;
-let actCond = 0;
-let tau = 0;
-let Cao = 0;
-let Cbo = 0;
-let molRatio = 0;
-let Xa = 0;
-let Ca = 0;
-let Cb = 0;
-let condAmb = 0;
-let Cas,Cbs,Va,Vb,V,M,T,k,exp;
 
 function calcConductivity() 
 {
@@ -1071,7 +1185,11 @@ function calcConductivity()
 	actCond= ${actCond}`);
 }
 
+
 let conductivity=0,tableArray=[];
+
+
+
 function setLPH(sideLPH) 
 {
 	calcConductivity();
@@ -1087,6 +1205,7 @@ function setLPH(sideLPH)
 	}
 	let totalLPH=((200-eaLPH)+(200-shLPH))/200;
 	document.getElementById("rain").style.height="89px";
+  console.log("rainfall");  
 	document.getElementById("rain").style.animation=`rainfall ${totalLPH}s linear infinite`;
 	if(eaLPH === 0 && shLPH === 0)
 	{
@@ -1123,9 +1242,16 @@ function displayMsg()
 	
 }
 
+function checkForError() {
+  if ((shConc * shLPH) / (eaConc * eaLPH) < 1) {
+    alert("Error!!");
+  }
+}
+
+
 function addReadingsToTable(eaLPH,shLPH,conductivity)
 {
-	document.getElementById("highlight").style.visibility="visible";
+	// document.getElementById("highlight").style.visibility="visible";
 	$("#observTable").delay(900)
     .queue(function (generate_table) 
 	{
@@ -1134,23 +1260,115 @@ function addReadingsToTable(eaLPH,shLPH,conductivity)
     });
 }
 
-let simRateConst=0, simFreqFact=0, simActEng=0;
-function addEvaluationFormReadingsToTable(reactTemp,rateConst,freqFact,actEng)
-{
-	$("#configInputTable").delay(900)
-    .queue(function (generate_table) 
-	{
-        $(this).append("<tr style='text-align:center; background-color:lightgrey;'><td>" + reactTemp + "</td><td>"+ rateConst +"</td><td>"+ freqFact +"</td><td>"+ actEng +"</td></tr>");
-		generate_table(); 
-    });
-	let temp = Number(document.getElementById("reactionTempEval").value);
-	simRateConst = Number(648868942 * (2.7182818284590452353602874713527  ** (-45574/(8.314*(temp+273))))); //same as k
-	simFreqFact = 6.49;
-	simActEng = 45574;
-	$("#configSimulatedTable").delay(900)
-    .queue(function (generate_table) 
-	{
-        $(this).append("<tr style='text-align:center; background-color:lightgrey;'><td>" + reactTemp + "</td><td>"+ simRateConst.toFixed(2) +"</td><td>"+ simFreqFact +"</td><td>"+ simActEng +"</td></tr>");
-		generate_table(); 
-    });
-}	
+function restartExperiment() {
+
+  console.log("restartExp");
+  hideAllExperimentParts();
+  gotoSetup();
+ 
+  resetClicked = true;
+}
+
+function hideSomeApparatus() {
+  document.getElementById("condDiv").style.visibility = "hidden";
+ 
+}
+
+let reactTemp = 0,
+  rateConst = 0,
+  freqFact = 0,
+  actEng = 0;
+
+function evaluateEntries() {
+
+  reactTemp = document.getElementById("reactionTempEval").value;
+  rateConst = document.getElementById("rateConstEval").value;
+  freqFact = document.getElementById("freqFactor").value;
+  actEng = document.getElementById("activationEnergy").value;
+  if (
+    !reactTemp ||
+    reactTemp == null ||
+    !rateConst ||
+    rateConst == null ||
+    !freqFact ||
+    freqFact == null ||
+    actEng == null ||
+    !actEng
+  ) {
+    alert(" Enter appropriate values in the input field to proceed....");
+  } else {
+    // document.getElementById("highlightEvaluation").style.visibility = "visible";
+    console.log("evaluate entires");
+    addEvaluationFormReadingsToTable(reactTemp, rateConst, freqFact, actEng);
+  }
+}
+
+let simRateConst = 0,
+  simFreqFact = 0,
+  simActEng = 0;
+
+  function addEvaluationFormReadingsToTable(reactTemp,rateConst,freqFact,actEng)
+  {
+    $("#configInputTable").delay(900)
+      .queue(function (generate_table) 
+    {
+          $(this).append("<tr style='text-align:center; background-color:#269494;'><td>" + reactTemp + "</td><td>"+ rateConst +"</td><td>"+ freqFact +"</td><td>"+ actEng +"</td></tr>");
+      generate_table(); 
+      });
+    let temp = Number(document.getElementById("reactionTempEval").value);
+    simRateConst = Number(648868942 * (2.7182818284590452353602874713527  ** (-45574/(8.314*(temp+273))))); //same as k
+    simFreqFact = 6.49;
+    simActEng = 45574;
+    $("#configSimulatedTable").delay(900)
+      .queue(function (generate_table) 
+    {
+          $(this).append("<tr style='text-align:center; background-color:#269494;'><td>" + reactTemp + "</td><td>"+ simRateConst.toFixed(2) +"</td><td>"+ simFreqFact +"</td><td>"+ simActEng +"</td></tr>");
+      generate_table(); 
+      });
+  }	
+
+function clearEvalReadings() {
+  clearTableRows("configInputTable");
+  clearTableRows("configSimulatedTable");
+}
+
+
+function showFirstScreen() {
+  // Show the first screen (Department of Chemical Engineering)
+  document.getElementById('canvas0').style.visibility = 'visible';
+  document.getElementById('condDiv').style.visibility = 'hidden';
+  // document.getElementById('condVal').style.visibility = 'hidden';
+  // document.getElementById('addReading').style.visibility = 'hidden';
+  
+
+  // Hide other screens
+  document.getElementById('demoOne').style.visibility = 'hidden';
+  document.getElementById('demoTwo').style.visibility = 'hidden';
+  document.getElementById('configExp').style.visibility = 'hidden';
+  document.getElementById('evaluateButtonFromData').style.visibility = "hidden";
+  document.getElementById('evaluatePart').style.visibility = 'hidden';
+  document.getElementById('labelImage').style.visibility = 'hidden';
+  document.getElementById('experimentSetup').style.visibility = 'hidden';
+  document.getElementById('canvas1').style.visibility = 'hidden';
+  document.getElementById('canvas2').style.visibility = 'hidden';
+  document.getElementById('canvas3').style.visibility = 'hidden';
+  document.getElementById('canvas4').style.visibility = 'hidden';
+  document.getElementById('experimentID').style.visibility = 'hidden';
+  document.getElementById("restartExpt").style.visibility = "hidden";
+  document.getElementById("goBackButton").style.visibility = "hidden";
+  document.getElementById("obserButton").style.visibility = "hidden";
+ 
+  document.getElementById('displayExpValues').style.visibility = 'hidden';
+  document.getElementById("myClose").style.visibility="hidden";
+
+  document.getElementById('observations').style.visibility = 'hidden';
+  document.getElementById("myClose1").style.visibility="hidden";
+  document.getElementById("observeTable").style.visibility = "hidden";
+  
+      document.getElementById("noteremsel").style.visibility = "hidden";
+  document.getElementById('canvas5').style.visibility = 'hidden';
+  document.getElementById('canvas6').style.visibility = 'hidden';
+   
+    document.getElementById("overflow").style.visibility = "hidden";
+   
+}
